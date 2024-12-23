@@ -9,6 +9,8 @@ void main() {
     CounterCubit(),
     CounterProvider(),
     CounterGetx(),
+    CounterSolidListenable(),
+    CounterGetxListenable(),
   ], child: MyApp()));
 }
 

@@ -26,22 +26,62 @@ class _CounterDisplay extends StatelessWidget {
           style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 35),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                counter.increment();
-              },
-              child: Text("Increment (+)"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                counter.decrement();
-              },
-              child: Text("decrement (-)"),
-            ),
-          ],
+        _buildCounterButtons(counter),
+      ],
+    );
+  }
+
+  Widget _buildCounterButtons(ICounter counter) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        ElevatedButton(
+          onPressed: counter.increment,
+          child: Text("Increment (+)"),
+        ),
+        ElevatedButton(
+          onPressed: counter.decrement,
+          child: Text("decrement (-)"),
+        ),
+      ],
+    );
+  }
+}
+
+class _CounterDisplayByListenable extends StatelessWidget {
+  final ICounterListenable counter;
+
+  const _CounterDisplayByListenable({required this.counter});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "Counter",
+          style: TextStyle(fontSize: 24),
+        ),
+        Text(
+          "${counter.value.counter}",
+          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 35),
+        _buildCounterButtons(counter),
+      ],
+    );
+  }
+
+  Widget _buildCounterButtons(ICounterListenable counter) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        ElevatedButton(
+          onPressed: counter.increment,
+          child: Text("Increment (+)"),
+        ),
+        ElevatedButton(
+          onPressed: counter.decrement,
+          child: Text("decrement (-)"),
         ),
       ],
     );
@@ -50,6 +90,7 @@ class _CounterDisplay extends StatelessWidget {
 
 class _CounterPageState extends State<CounterPage> {
   late ICounter _selectedStateManagement;
+  late ICounterListenable _selectedStateManagementListenable;
 
   @override
   Widget build(BuildContext context) {
@@ -59,56 +100,21 @@ class _CounterPageState extends State<CounterPage> {
         title: Text('Counter Page'),
       ),
       body: Column(
-        // spacing: 25,
         children: [
           SizedBox(height: 35),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Radio<ICounter>(
-                    value: context.watch<CounterCubit>()!,
-                    groupValue: _selectedStateManagement,
-                    onChanged: _handleRadioValueChange,
-                  ),
-                  const Text('Cubit '),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Radio<ICounter>(
-                    value: context.watch<CounterBloc>()!,
-                    groupValue: _selectedStateManagement,
-                    onChanged: _handleRadioValueChange,
-                  ),
-                  const Text('Bloc'),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Radio<ICounter>(
-                    value: context.watch<CounterGetx>()!,
-                    groupValue: _selectedStateManagement,
-                    onChanged: _handleRadioValueChange,
-                  ),
-                  const Text('GetX'),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Radio<ICounter>(
-                    value: context.watch<CounterProvider>()!,
-                    groupValue: _selectedStateManagement,
-                    onChanged: _handleRadioValueChange,
-                  ),
-                  const Text('Provider'),
-                ],
-              ),
-            ],
-          ),
+          _buildStateManagementOptions(context),
           Spacer(),
           _CounterDisplay(counter: counter!),
+          Spacer(),
+          Text(
+            'Counter by Listenable',
+            style: TextStyle(fontSize: 24),
+          ),
+          Spacer(),
+          _buildListenableOptions(context),
+          Spacer(),
+          _CounterDisplayByListenable(
+              counter: _selectedStateManagementListenable),
           Spacer(flex: 2),
         ],
       ),
@@ -118,7 +124,86 @@ class _CounterPageState extends State<CounterPage> {
   @override
   void initState() {
     _selectedStateManagement = context.read<CounterBloc>()!;
+    _selectedStateManagementListenable =
+        context.read<CounterSolidListenable>()!;
     super.initState();
+  }
+
+  Widget _buildListenableOptions(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildRadioOption<ICounterListenable>(
+          context: context,
+          value: context.watch<CounterSolidListenable>()!,
+          groupValue: _selectedStateManagementListenable,
+          label: 'Getx',
+          onChanged: _handleRadioValueChangeListen,
+        ),
+        _buildRadioOption<ICounterListenable>(
+          context: context,
+          value: context.watch<CounterGetxListenable>()!,
+          groupValue: _selectedStateManagementListenable,
+          label: 'Solidart',
+          onChanged: _handleRadioValueChangeListen,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRadioOption<T>({
+    required BuildContext context,
+    required T value,
+    required T groupValue,
+    required String label,
+    required void Function(T?) onChanged,
+  }) {
+    return Row(
+      children: <Widget>[
+        Radio<T>(
+          value: value,
+          groupValue: groupValue,
+          onChanged: onChanged,
+        ),
+        Text(label),
+      ],
+    );
+  }
+
+  Widget _buildStateManagementOptions(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        _buildRadioOption<ICounter>(
+          context: context,
+          value: context.watch<CounterCubit>()!,
+          groupValue: _selectedStateManagement,
+          label: 'Cubit',
+          onChanged: _handleRadioValueChange,
+        ),
+        _buildRadioOption<ICounter>(
+          context: context,
+          value: context.watch<CounterBloc>()!,
+          groupValue: _selectedStateManagement,
+          label: 'Bloc',
+          onChanged: _handleRadioValueChange,
+        ),
+        _buildRadioOption<ICounter>(
+          context: context,
+          value: context.watch<CounterGetx>()!,
+          groupValue: _selectedStateManagement,
+          label: 'GetX',
+          onChanged: _handleRadioValueChange,
+        ),
+        _buildRadioOption<ICounter>(
+          context: context,
+          value: context.watch<CounterProvider>()!,
+          groupValue: _selectedStateManagement,
+          label: 'Provider',
+          onChanged: _handleRadioValueChange,
+        ),
+      ],
+    );
   }
 
   ICounter? _handleListenableChange(ICounter? value, BuildContext c) {
@@ -134,6 +219,12 @@ class _CounterPageState extends State<CounterPage> {
   void _handleRadioValueChange(ICounter? value) {
     setState(() {
       _selectedStateManagement = value!;
+    });
+  }
+
+  void _handleRadioValueChangeListen(ICounterListenable? value) {
+    setState(() {
+      _selectedStateManagementListenable = value!;
     });
   }
 }
