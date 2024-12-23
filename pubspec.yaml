@@ -31,11 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
-
-dev_dependencies:
   unistate_provider:
     git:
       url: https://github.com/aissat/unistate.git
@@ -48,6 +43,10 @@ dev_dependencies:
       path: unistate_adapter
       ref: feat/getx
 
+  cupertino_icons: ^1.0.8
+  solidart: ^1.5.4
+
+dev_dependencies:
   flutter_test:
     sdk: flutter
 
