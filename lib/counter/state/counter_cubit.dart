@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:unistate_adapter/unistate_adapter.dart';
 
-import 'abstract.dart';
+import 'counter_interface.dart';
 
 class CounterCubit extends Cubit<int>
     with UnistateCubitMixin<int>

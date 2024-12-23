@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:unistate_adapter/unistate_adapter.dart';
 
-import 'abstract.dart';
+import 'counter_interface.dart';
 
 class CounterProvider extends ChangeNotifier
     with UnistateNotifierMixin<int>
