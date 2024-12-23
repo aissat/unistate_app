@@ -5,7 +5,7 @@ import 'abstract.dart';
 
 class CounterProvider extends ChangeNotifier
     with UnistateNotifierMixin<int>
-    implements Counter {
+    implements ICounter {
   CounterProvider() : super();
 
   @override

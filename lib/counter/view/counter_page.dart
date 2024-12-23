@@ -10,7 +10,7 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterDisplay extends StatelessWidget {
-  final Counter counter;
+  final ICounter counter;
   const _CounterDisplay({required this.counter});
 
   @override
@@ -49,7 +49,7 @@ class _CounterDisplay extends StatelessWidget {
 }
 
 class _CounterPageState extends State<CounterPage> {
-  late Counter _selectedStateManagement;
+  late ICounter _selectedStateManagement;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class _CounterPageState extends State<CounterPage> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Radio<Counter>(
+                  Radio<ICounter>(
                     value: context.watch<CounterCubit>()!,
                     groupValue: _selectedStateManagement,
                     onChanged: _handleRadioValueChange,
@@ -77,7 +77,7 @@ class _CounterPageState extends State<CounterPage> {
               ),
               Row(
                 children: <Widget>[
-                  Radio<Counter>(
+                  Radio<ICounter>(
                     value: context.watch<CounterBloc>()!,
                     groupValue: _selectedStateManagement,
                     onChanged: _handleRadioValueChange,
@@ -87,7 +87,7 @@ class _CounterPageState extends State<CounterPage> {
               ),
               Row(
                 children: <Widget>[
-                  Radio<Counter>(
+                  Radio<ICounter>(
                     value: context.watch<CounterGetx>()!,
                     groupValue: _selectedStateManagement,
                     onChanged: _handleRadioValueChange,
@@ -97,7 +97,7 @@ class _CounterPageState extends State<CounterPage> {
               ),
               Row(
                 children: <Widget>[
-                  Radio<Counter>(
+                  Radio<ICounter>(
                     value: context.watch<CounterProvider>()!,
                     groupValue: _selectedStateManagement,
                     onChanged: _handleRadioValueChange,
@@ -121,7 +121,7 @@ class _CounterPageState extends State<CounterPage> {
     super.initState();
   }
 
-  Counter? _handleListenableChange(Counter? value, BuildContext c) {
+  ICounter? _handleListenableChange(ICounter? value, BuildContext c) {
     return switch (value) {
       CounterBloc _ => c.watch<CounterBloc>()!,
       CounterCubit _ => c.watch<CounterCubit>()!,
@@ -131,7 +131,7 @@ class _CounterPageState extends State<CounterPage> {
     };
   }
 
-  void _handleRadioValueChange(Counter? value) {
+  void _handleRadioValueChange(ICounter? value) {
     setState(() {
       _selectedStateManagement = value!;
     });

@@ -5,7 +5,7 @@ import 'abstract.dart';
 
 class CounterCubit extends Cubit<int>
     with UnistateCubitMixin<int>
-    implements Counter {
+    implements ICounter {
   CounterCubit() : super(0);
 
   @override

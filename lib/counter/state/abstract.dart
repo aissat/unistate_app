@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-abstract class Counter implements ValueListenable<int> {
+abstract interface class ICounter extends ValueListenable<int> {
   void decrement();
   void increment();
 }

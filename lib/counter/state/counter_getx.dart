@@ -5,7 +5,7 @@ import 'abstract.dart';
 
 class CounterGetx extends GetxController
     with UnistateGetxMixin<int>
-    implements Counter {
+    implements ICounter {
   CounterGetx() {
     initState(0);
   }
